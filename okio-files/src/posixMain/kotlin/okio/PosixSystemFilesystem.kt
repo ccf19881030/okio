@@ -37,14 +37,8 @@ internal object PosixSystemFilesystem : Filesystem() {
   private val SELF_DIRECTORY_ENTRY = ".".toPath()
   private val PARENT_DIRECTORY_ENTRY = "..".toPath()
 
-  override fun baseDirectory(): Path {
-    val bytes: CPointer<ByteVarOf<Byte>> = variantGetCwd()
-      ?: throw IOException(errnoString(errno))
-    try {
-      return Buffer().writeNullTerminated(bytes).toPath()
-    } finally {
-      free(bytes)
-    }
+  override fun canonicalize(path: Path): Path {
+    return variantCanonicalize(path)
   }
 
   override fun temporaryDirectory() = (getenv("TMPDIR")?.toKString() ?: "/tmp").toPath()

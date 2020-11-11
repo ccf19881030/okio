@@ -20,6 +20,8 @@ import kotlinx.cinterop.CPointer
 
 internal expect val VARIANT_DIRECTORY_SEPARATOR: String
 
+internal expect fun PosixSystemFilesystem.variantCanonicalize(path: Path): Path
+
 internal expect fun PosixSystemFilesystem.variantDelete(path: Path)
 
 internal expect fun PosixSystemFilesystem.variantMkdir(dir: Path): Int

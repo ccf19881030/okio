@@ -27,6 +27,10 @@ import platform.posix.rmdir
 
 internal actual val VARIANT_DIRECTORY_SEPARATOR = "\\"
 
+internal actual fun PosixSystemFilesystem.variantCanonicalize(path: Path): Path {
+  throw IOException("TODO")
+}
+
 internal actual fun PosixSystemFilesystem.variantDelete(path: Path) {
   val pathString = path.toString()
 

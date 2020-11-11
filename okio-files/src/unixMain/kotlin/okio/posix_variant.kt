@@ -17,13 +17,26 @@ package okio
 
 import kotlinx.cinterop.ByteVarOf
 import kotlinx.cinterop.CPointer
+import okio.Path.Companion.toPath
 import platform.posix.PATH_MAX
 import platform.posix.errno
+import platform.posix.free
 import platform.posix.getcwd
 import platform.posix.mkdir
+import platform.posix.realpath
 import platform.posix.remove
 
 internal actual val VARIANT_DIRECTORY_SEPARATOR = "/"
+
+internal actual fun PosixSystemFilesystem.variantCanonicalize(path: Path): Path {
+  val realpath = realpath(path.toString(), null)
+    ?: throw IOException(errnoString(errno))
+  try {
+    return Buffer().writeNullTerminated(realpath).toPath()
+  } finally {
+    free(realpath)
+  }
+}
 
 internal actual fun PosixSystemFilesystem.variantDelete(path: Path) {
   val result = remove(path.toString())
